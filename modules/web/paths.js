@@ -1,4 +1,4 @@
-const { url } = require("../../../config/app");
+const { url } = require("../../config/app");
 
 module.exports = {
   root: path => `${url}${path}`,

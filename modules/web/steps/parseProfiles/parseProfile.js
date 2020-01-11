@@ -1,17 +1,15 @@
-const paths = require("../helpers/paths");
-const { sleep } = require("../helpers/sleep");
+const paths = require("../../paths");
+const { sleep } = require("../../sleep");
 
-async function parseProfiles(page, profiles) {
-  console.time("profiles parsing");
-  const parsedProfiles = [];
-  for (const profile of profiles) {
+module.exports = {
+  async parseProfile(page, profile) {
     await sleep(200);
     try {
       await page.goto(paths.root(profile.link));
 
       //parse head
       const headInfo = await page.evaluate(() => {
-        const node = document.querySelectorAll("div.p_end")[0];
+        const node = document.querySelector("div.p_end");
         const [nameStr, lvlStr] = node.textContent.split("(");
         return { name: nameStr.trim(), lvl: parseInt(lvlStr, 10) };
       });
@@ -66,10 +64,5 @@ async function parseProfiles(page, profiles) {
     } catch (error) {
       console.log(`Failed to parse ${profile.link}, ${error}`);
     }
-  }
-  console.timeEnd("profiles parsing");
-  console.log(`Succesfully parsed ${parsedProfiles.length} of ${profiles.length}`);
-  return parsedProfiles;
-}
-
-module.exports = { parseProfiles };
+  },
+};
